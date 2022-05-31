@@ -4,10 +4,13 @@ export default function TextForms(props) {
   const [text, setText] = useState("");
 
   function handleOnclick() {
-    const res = text.toUpperCase();
-    console.log("buttonclicked", res);
-    setText(res);
-    props.allert("Text changed to Upper Case","success");
+    if (text === "") {
+    } else {
+      const res = text.toUpperCase();
+      console.log("buttonclicked", res);
+      setText(res);
+      props.allert("Text changed to Upper Case", "success");
+    }
   }
 
   function handleOnChange(event) {
@@ -16,16 +19,17 @@ export default function TextForms(props) {
   }
   function clearOnclick() {
     setText("");
-    props.allert("Text Cleared","danger");
+    props.allert("Text Cleared", "danger");
   }
   function copyOnclick() {
     navigator.clipboard.writeText(text);
-    props.allert("Text Copied to clipboard","success");
+    props.allert("Text Copied to clipboard", "success");
+    document.getSelection().removeAllRanges()
   }
   function removeWSOnclick() {
     var repl = text.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
     setText(repl);
-    props.allert("whitespace removed","warning");
+    props.allert("whitespace removed", "warning");
   }
   return (
     <>
@@ -40,7 +44,7 @@ export default function TextForms(props) {
             onChange={handleOnChange}
           ></textarea>
         </div>
-        <button className="btn btn-primary mx-2"  onClick={handleOnclick}>
+        <button className="btn btn-primary mx-2" onClick={handleOnclick}>
           Convert
         </button>
         <button className="btn btn-primary mx-2" onClick={clearOnclick}>
@@ -56,9 +60,16 @@ export default function TextForms(props) {
       <div className="container">
         <h1>Your Text Summery</h1>
         <p>
-          {text.split(" ").length} words and {text.length} characters
+          {
+            text.split(" ").filter((element) => {
+              return element.length !== 0;
+            }).length
+          }{" "}
+          words and {text.length} characters
         </p>
-        <p>{0.008 * text.split(" ").length} time to Read</p>
+        <p>{0.008 * text.split(" ").filter((element) => {
+              return element.length !== 0;
+            }).length} time to Read</p>
       </div>
     </>
   );
